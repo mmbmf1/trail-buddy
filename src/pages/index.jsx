@@ -1,64 +1,54 @@
 import Head from 'next/head'
+import baseUrl from '../constants/baseUrl'
 
-export default function Home() {
+const Home = (props) => {
   return (
     <div>
       <Head>
         <title>Trail Buddy</title>
         <link rel="icon" href="/sign.ico" />
+        <meta property="og:title" content="Trail Buddy" />
+        <meta
+          property="og:image"
+          content="https://github.com/mmbmf1/api-hack/blob/master/images/landing_page.jpg?raw=true"
+        />
+        <meta property="og:description" content="Trail Buddy" />
+        <meta property="og:url" content="https://mmbmf1.github.io/api-hack/" />
       </Head>
 
-      <main>
-        {/* <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div> */}
-      </main>
-
-      {/* <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer> */}
+      <div>
+        <h1>Find Trails Near You</h1>
+        {/* move this to a component */}
+        <form action="#" class="js-form">
+          <input
+            type="text"
+            name="trail-search"
+            id="js-trail-search"
+            placeholder="Enter a city, state or zip"
+          />
+          <input type="submit" value="search" id="location-search" />
+        </form>
+        {/* use logic to display search results */}
+      </div>
     </div>
   )
+}
+
+export default Home
+
+export async function getServerSideProps(context) {
+  const { req, res } = context
+  console.log(req, res)
+
+  try {
+    const trailRes = await fetch(`${baseUrl}/api/trails`)
+    const weatherRes = await fetch(`${baseUrl}/api/weather`)
+
+    const trails = await trailRes.json()
+    const weather = await weatherRes.json()
+
+    console.log(trails, weather)
+  } catch (err) {
+    console.log('Error', err)
+  }
 }
