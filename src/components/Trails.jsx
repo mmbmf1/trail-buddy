@@ -2,28 +2,45 @@ import React from 'react'
 import Weather from '../components/Weather'
 
 const Trails = (props) => {
-  console.log('PROPS', props)
+  const { trails, setSearchedTrails } = props
+  console.log('USE THESE Trails', trails.data[0])
+
+  const handleClick = () => {
+    setSearchedTrails(null)
+  }
   return (
-    <div class="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
-      <div class="absolute inset-0">
-        <div class="bg-white h-1/3 sm:h-2/3"></div>
+    <div class="relative bg-gray-50 pt-4 pb-10 px-4 sm:px-6 lg:pt-10 lg:pb-10 lg:px-8">
+      <div className="flex mb-8">
+        <span class="relative z-0 inline-flex  align-middle">
+          <button
+            type="button"
+            class="relative inline-flex items-center px-2 py-2 rounded-l-md bg-gray-50 text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+            aria-label="Previous"
+            onClick={() => handleClick()}
+          >
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </span>
+        <p className="mt-1.5 align-middle text-gray-500">Back</p>
       </div>
       <div class="relative max-w-7xl mx-auto">
         <div class="text-center">
           <h2 class="text-3xl leading-9 tracking-tight font-extrabold text-gray-900 sm:text-4xl sm:leading-10">
-            From the blog
+            Search Results
           </h2>
-          <p class="mt-3 max-w-2xl mx-auto text-xl leading-7 text-gray-500 sm:mt-4">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa
-            libero labore natus atque, ducimus sed.
-          </p>
         </div>
-        <div class="mt-12 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none">
+        <div class="mt-6 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none">
           <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
             <div class="flex-shrink-0">
               <img
                 class="h-48 w-full object-cover"
-                src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80"
+                src={`${trails.data[0].imgMedium}`}
                 alt=""
               />
             </div>
@@ -31,26 +48,22 @@ const Trails = (props) => {
               <div class="flex-1">
                 <p class="text-sm leading-5 font-medium text-indigo-600">
                   <a href="#" class="hover:underline">
-                    Blog
+                    {trails.data[0].location}
                   </a>
                 </p>
-                <a href="#" class="block">
-                  <h3 class="mt-2 text-xl leading-7 font-semibold text-gray-900">
-                    Boost your conversion rate
-                  </h3>
-                  <p class="mt-3 text-base leading-6 text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Architecto accusantium praesentium eius, ut atque fuga
-                    culpa, similique sequi cum eos quis dolorum.
-                  </p>
-                </a>
+                <h3 class="mt-2 text-xl leading-7 font-semibold text-gray-900">
+                  {trails.data[0].name}
+                </h3>
+                <p class="mt-3 text-base leading-6 text-gray-500">
+                  {trails.data[0].summary}
+                </p>
               </div>
               <div class="mt-6 flex items-center">
                 <div class="flex-shrink-0">
                   <a href="#">
                     <img
                       class="h-10 w-10 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      src={`icons/${trails.data[0].weather[0].weather.icon}.png`}
                       alt=""
                     />
                   </a>
@@ -58,19 +71,92 @@ const Trails = (props) => {
                 <div class="ml-3">
                   <p class="text-sm leading-5 font-medium text-gray-900">
                     <a href="#" class="hover:underline">
-                      Roel Aufderhar
+                      {trails.data[0].weather[0].weather.description}
                     </a>
                   </p>
                   <div class="flex text-sm leading-5 text-gray-500">
-                    <time datetime="2020-03-16">Mar 16, 2020</time>
+                    <time datetime="2020-03-16">
+                      {new Date(
+                        trails.data[0].weather[0].datetime
+                      ).toLocaleDateString()}
+                    </time>
                     <span class="mx-1">&middot;</span>
-                    <span>6 min read</span>
+                    <span>
+                      {Math.round(
+                        (trails.data[0].weather[0].temp * 9) / 5 + 32
+                      )}
+                      &deg; F
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6 flex items-center">
+                <div class="flex-shrink-0">
+                  <a href="#">
+                    <img
+                      class="h-10 w-10 rounded-full"
+                      src={`icons/${trails.data[0].weather[1].weather.icon}.png`}
+                      alt=""
+                    />
+                  </a>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm leading-5 font-medium text-gray-900">
+                    <a href="#" class="hover:underline">
+                      {trails.data[0].weather[1].weather.description}
+                    </a>
+                  </p>
+                  <div class="flex text-sm leading-5 text-gray-500">
+                    <time datetime="2020-03-16">
+                      {new Date(
+                        trails.data[0].weather[1].datetime
+                      ).toLocaleDateString()}
+                    </time>
+                    <span class="mx-1">&middot;</span>
+                    <span>
+                      {Math.round(
+                        (trails.data[0].weather[1].temp * 9) / 5 + 32
+                      )}
+                      &deg; F
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6 flex items-center">
+                <div class="flex-shrink-0">
+                  <a href="#">
+                    <img
+                      class="h-10 w-10 rounded-full"
+                      src={`icons/${trails.data[0].weather[2].weather.icon}.png`}
+                      alt=""
+                    />
+                  </a>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm leading-5 font-medium text-gray-900">
+                    <a href="#" class="hover:underline">
+                      {trails.data[0].weather[2].weather.description}
+                    </a>
+                  </p>
+                  <div class="flex text-sm leading-5 text-gray-500">
+                    <time datetime="2020-03-16">
+                      {new Date(
+                        trails.data[0].weather[2].datetime
+                      ).toLocaleDateString()}
+                    </time>
+                    <span class="mx-1">&middot;</span>
+                    <span>
+                      {Math.round(
+                        (trails.data[0].weather[2].temp * 9) / 5 + 32
+                      )}
+                      &deg; F
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
+          {/* <div class="flex flex-col rounded-lg shadow-lg overflow-hidden">
             <div class="flex-shrink-0">
               <img
                 class="h-48 w-full object-cover"
@@ -174,7 +260,7 @@ const Trails = (props) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

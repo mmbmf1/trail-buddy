@@ -37,7 +37,7 @@ export default async function trails(req, res) {
     const weatherTrails = await fetch(wURL)
       .then((response) => response.json())
       .then(function returnWeather(weatherResponse) {
-        data.push({ ...trails[i], weather: weatherResponse.data[0] })
+        data.push({ ...trails[i], weather: weatherResponse.data })
       })
   }
 

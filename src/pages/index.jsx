@@ -49,7 +49,7 @@ const Search = (props) => {
 
       <div>
         {!searchedTrails ? (
-          <div>
+          <div className="h-screen w-screen mr-0 bg-gray-700 py-48">
             <form
               className="text-center"
               onSubmit={(e) => handleSearchSubmit(e, searchValue)}
@@ -57,24 +57,24 @@ const Search = (props) => {
               <div>
                 <label
                   for="email"
-                  class="block text-sm font-medium leading-5 text-gray-700"
+                  class="block py-2 text-xl font-medium leading-5 text-white"
                 >
                   Find Trails Near You
                 </label>
-                <div class="flex mt-1 relative rounded-md shadow-sm">
+                <div class="flex mt-1 relative  justify-center">
                   <input
                     id="search"
                     type="text"
-                    class="form-input block w-full sm:text-sm sm:leading-5"
+                    class="form-input block w-1/2 sm:text-sm sm:leading-5 rounded-md shadow-sm"
                     placeholder="Enter a city, state or zip code"
                     onChange={(e) => setSearchValue(e.target.value)}
                   />
                   <button
                     type="button"
-                    class="inline-flex items-center px-6 border border-transparent text-base leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-50 focus:outline-none focus:border-indigo-300 focus:shadow-outline-indigo active:bg-indigo-200 transition ease-in-out duration-150"
+                    class="inline-flex items-center mx-2 px-6 border border-transparent text-base leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-50 focus:outline-none focus:border-indigo-300 focus:shadow-outline-indigo active:bg-indigo-200 transition ease-in-out duration-150"
                     onClick={(e) => handleSearchSubmit(e, searchValue)}
                   >
-                    Button text
+                    Search
                   </button>
                 </div>
               </div>
@@ -86,7 +86,10 @@ const Search = (props) => {
             ) : null}
           </div>
         ) : (
-          <Trails trails={searchedTrails} />
+          <Trails
+            trails={searchedTrails}
+            setSearchedTrails={setSearchedTrails}
+          />
         )}
       </div>
     </div>
