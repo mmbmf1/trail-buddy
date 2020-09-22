@@ -1,29 +1,35 @@
 import React, { useState } from 'react'
 import Head from 'next/head'
+import Trails from '../components/Trails'
 import baseUrl from '../constants/baseUrl'
 
-const Home = (props) => {
+const Search = (props) => {
   const { baseUrl } = props
 
   const [searchValue, setSearchValue] = useState(null)
   const [searchError, setSearchError] = useState(null)
+  const [searchedTrails, setSearchedTrails] = useState(null)
 
   const handleSearchSubmit = async (e, searchValue) => {
     e.preventDefault()
+    setSearchValue(null)
+    setSearchError(null)
 
     try {
       const response = await fetch(`${baseUrl}/api/trails/${searchValue}`)
 
+      // console.log('RESPONSE', response)
+
       if (!response.ok) {
-        console.log('handle trail error message')
+        setSearchError('Trails not found for that location, please try again')
         return
       }
 
       const trails = await response.json()
-
-      console.log('TRAILS', trails)
+      setSearchedTrails(trails)
     } catch (error) {
       console.log(error)
+      setSearchError('Uh oh, something went wrong. Please try again')
     }
   }
 
@@ -42,45 +48,57 @@ const Home = (props) => {
       </Head>
 
       <div>
-        <h1>Find Trails Near You</h1>
-        {/* move this to a component */}
-        <form onSubmit={(e) => handleSearchSubmit(e, searchValue)}>
-          <input
-            type="text"
-            name="trail-search"
-            placeholder="Enter a city, state or zip"
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-          <input type="submit" value="search" id="location-search" />
-        </form>
-        {/* use logic to display search results */}
+        {!searchedTrails ? (
+          <div>
+            <form
+              className="text-center"
+              onSubmit={(e) => handleSearchSubmit(e, searchValue)}
+            >
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium leading-5 text-gray-700"
+                >
+                  Find Trails Near You
+                </label>
+                <div class="flex mt-1 relative rounded-md shadow-sm">
+                  <input
+                    id="search"
+                    type="text"
+                    class="form-input block w-full sm:text-sm sm:leading-5"
+                    placeholder="Enter a city, state or zip code"
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    class="inline-flex items-center px-6 border border-transparent text-base leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-50 focus:outline-none focus:border-indigo-300 focus:shadow-outline-indigo active:bg-indigo-200 transition ease-in-out duration-150"
+                    onClick={(e) => handleSearchSubmit(e, searchValue)}
+                  >
+                    Button text
+                  </button>
+                </div>
+              </div>
+            </form>
+            {searchError ? (
+              <div className="text-red-700">
+                <h1>{searchError}</h1>
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <Trails trails={searchedTrails} />
+        )}
       </div>
     </div>
   )
 }
 
-export default Home
+export default Search
 
-export async function getServerSideProps(context) {
-  // const { req, res } = context
-  // console.log(req, res)
-
-  // try {
-  //   const trailRes = await fetch(`${baseUrl}/api/trails`)
-  // const weatherRes = await fetch(`${baseUrl}/api/weather`)
-
-  // const trails = await trailRes.json()
-  // const weather = await weatherRes.json()
-
-  // console.log('TRAILS', trails)
-
+export async function getServerSideProps() {
   return {
     props: {
-      // trails: trails,
       baseUrl: baseUrl,
     },
-    //   }
-    // } catch (err) {
-    //   console.log('Error', err)
   }
 }

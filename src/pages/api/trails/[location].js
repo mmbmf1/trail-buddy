@@ -12,6 +12,12 @@ export default async function trails(req, res) {
 
   const { trails } = await getTrails(latitude, longitude)
 
+  console.log('TRAILS', trails)
+
+  if (trails.length === 0) {
+    return res.status(404).send({ error: 'No trails found for this location' })
+  }
+
   let data = []
 
   for (let i = 0; i < trails.length; i++) {
