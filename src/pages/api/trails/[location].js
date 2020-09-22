@@ -1,35 +1,39 @@
 import geocodeLocation from '../../../utils/geocodeLocation'
-import formatParams from '../../../utils/formatParams'
-// import formatWeatherParams from '../../../utils/formatWeatherParams'
+import getTrails from '../../../utils/getTrails'
+import formatWeatherParams from '../../../utils/formatWeatherParams'
 
 export default async function trails(req, res) {
   const { location } = req.query
-  //geocode location input by user
 
+  //geocode location input by user
   const { position } = await geocodeLocation(location)
 
   const { latitude, longitude } = position.coords
 
-  //put these in .env
-  const trailKey = process.env.TRAIL_KEY
-  console.log('KEY', trailKey)
-  const trailURL = 'https://www.hikingproject.com/data/get-trails'
+  const { trails } = await getTrails(latitude, longitude)
 
-  const params = {
-    lat: latitude,
-    lon: longitude,
-    maxDistance: 50,
-    maxResults: 5,
-    key: trailKey,
+  let data = []
+
+  for (let i = 0; i < trails.length; i++) {
+    const weatherKey = process.env.WEATHER_KEY
+    const weatherURL = 'https://api.weatherbit.io/v2.0/forecast/daily'
+
+    const weatherParams = {
+      lat: trails[i].latitude,
+      lon: trails[i].longitude,
+      days: 3,
+      key: weatherKey,
+    }
+
+    const weatherString = await formatWeatherParams(weatherParams)
+    const wURL = weatherURL + '?' + weatherString
+
+    const weatherTrails = await fetch(wURL)
+      .then((response) => response.json())
+      .then(function returnWeather(weatherResponse) {
+        data.push({ ...trails[i], weather: weatherResponse.data[0] })
+      })
   }
 
-  const queryString = await formatParams(params)
-
-  const tURL = trailURL + '?' + queryString
-
-  const trailRes = await fetch(tURL)
-
-  const trailData = await trailRes.json()
-
-  return res.status(200).send({ trailData })
+  return res.status(200).send({ data })
 }

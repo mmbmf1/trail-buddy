@@ -19,9 +19,9 @@ const Home = (props) => {
         return
       }
 
-      const data = await response.json()
+      const trails = await response.json()
 
-      console.log('TRAILS', data)
+      console.log('TRAILS', trails)
     } catch (error) {
       console.log(error)
     }
