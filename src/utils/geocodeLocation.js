@@ -1,8 +1,6 @@
 import formatParams from './formatParams'
 
 export default async function geocodeLocation(location) {
-  console.log('location', location)
-
   //put these in .env
   const geoKey = process.env.GEO_KEY
   const geoURL = 'https://www.mapquestapi.com/geocoding/v1/address'

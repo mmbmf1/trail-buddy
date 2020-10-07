@@ -31,6 +31,7 @@ const Search = (props) => {
     } catch (error) {
       console.log(error)
       setSearchError('Uh oh, something went wrong. Please try again')
+      setLoading(false)
     }
   }
 
