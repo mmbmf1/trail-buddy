@@ -9,16 +9,16 @@ const Search = (props) => {
   const [searchValue, setSearchValue] = useState(null)
   const [searchError, setSearchError] = useState(null)
   const [searchedTrails, setSearchedTrails] = useState(null)
+  const [loading, setLoading] = useState(null)
 
   const handleSearchSubmit = async (e, searchValue) => {
+    setLoading(true)
     e.preventDefault()
     setSearchValue(null)
     setSearchError(null)
 
     try {
       const response = await fetch(`${baseUrl}/api/trails/${searchValue}`)
-
-      // console.log('RESPONSE', response)
 
       if (!response.ok) {
         setSearchError('Trails not found for that location, please try again')
@@ -27,6 +27,7 @@ const Search = (props) => {
 
       const trails = await response.json()
       setSearchedTrails(trails)
+      setLoading(false)
     } catch (error) {
       console.log(error)
       setSearchError('Uh oh, something went wrong. Please try again')
@@ -48,7 +49,7 @@ const Search = (props) => {
       </Head>
 
       <div>
-        {!searchedTrails ? (
+        {!searchedTrails && !loading ? (
           <div className="h-screen w-screen mr-0 bg-gray-700 py-48">
             <form
               className="text-center"
@@ -86,10 +87,16 @@ const Search = (props) => {
             ) : null}
           </div>
         ) : (
-          <Trails
-            trails={searchedTrails}
-            setSearchedTrails={setSearchedTrails}
-          />
+          <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <Trails
+                trails={searchedTrails}
+                setSearchedTrails={setSearchedTrails}
+              />
+            )}
+          </div>
         )}
       </div>
     </div>

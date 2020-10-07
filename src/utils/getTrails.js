@@ -1,16 +1,14 @@
 import formatParams from '../utils/formatParams'
 
 export default async function getTrails(latitude, longitude) {
-  console.log('LATLNG', latitude, longitude)
-
   const trailKey = process.env.TRAIL_KEY
   const trailURL = 'https://www.hikingproject.com/data/get-trails'
 
   const params = {
     lat: latitude,
     lon: longitude,
-    maxDistance: 10,
-    maxResults: 2,
+    maxDistance: 25,
+    maxResults: 5,
     key: trailKey,
   }
 
